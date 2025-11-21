@@ -9,7 +9,7 @@ anthropic==0.3.6
 anyio==3.7.1
 appdirs==1.4.4
 asgiref==3.7.2
-asttokens==2.2.1
+asttokens==3.0.1
 astunparse==1.6.3
 async-generator==1.10
 async-timeout==4.0.2
