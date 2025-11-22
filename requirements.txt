@@ -14,7 +14,7 @@ astunparse==1.6.3
 async-generator==1.10
 async-timeout==4.0.2
 asynctest==0.13.0
-attrs==23.1.0
+attrs==25.4.0
 auto_gpt_plugin_template==0.0.3
 autoflake==2.1.1
 backcall==0.2.0
