@@ -52,7 +52,7 @@ docker-pycreds==0.4.0
 duckduckgo-search==2.9.4
 et-xmlfile==1.1.0
 exceptiongroup==1.1.1
-execnet==1.9.0
+execnet==2.1.2
 executing==1.2.0
 faiss-cpu==1.7.4
 fastapi==0.103.1
