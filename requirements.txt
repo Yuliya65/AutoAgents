@@ -25,7 +25,7 @@ cachetools==5.3.0
 camel-converter==3.0.2
 catalogue==2.0.8
 certifi==2023.7.22
-cffi==1.15.1
+cffi==2.1.1
 cfgv==3.3.1
 channels==4.0.0
 chardet==5.1.0
