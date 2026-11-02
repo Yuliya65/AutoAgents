@@ -1,4 +1,4 @@
-FROM tiangolo/uwsgi-nginx:python3.10
+FROM tiangolo/uwsgi-nginx:python3.10@sha256:8980c723efaa95194d90ac91c47fc14107381c913674ca8145033586046d7800
 
 ENV LISTEN_PORT 7860
 ENV USE_HTML_ROOT /app/autoagents/frontend/app
