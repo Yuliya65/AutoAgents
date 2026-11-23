@@ -90,54 +90,14 @@ OUTPUT_MAPPING = {
 
 
 class WriteDesign(Action):
-    def __init__(self, name, context=None, llm=None):
+    def __init__(self, name="WriteDesign", context=None, llm=None):
         super().__init__(name, context, llm)
-        self.desc = "Based on the PRD, think about the system design, and design the corresponding APIs, " \
-                    "data structures, library tables, processes, and paths. Please provide your design, feedback " \
-                    "clearly and in detail."
-
-    def recreate_workspace(self, workspace: Path):
-        try:
-            shutil.rmtree(workspace)
-        except FileNotFoundError:
-            pass  # Folder does not exist; ignore
-        workspace.mkdir(parents=True, exist_ok=True)
-
-    def _save_prd(self, docs_path, resources_path, prd):
-        prd_file = docs_path / 'prd.md'
-        quadrant_chart = CodeParser.parse_code(block="Competitive Quadrant Chart", text=prd)
-        mermaid_to_file(quadrant_chart, resources_path / 'competitive_analysis')
-        logger.info(f"Saving PRD to {prd_file}")
-        prd_file.write_text(prd)
-
-    def _save_system_design(self, docs_path, resources_path, content):
-        data_api_design = CodeParser.parse_code(block="Data structures and interface definitions", text=content)
-        seq_flow = CodeParser.parse_code(block="Program call flow", text=content)
-        mermaid_to_file(data_api_design, resources_path / 'data_api_design')
-        mermaid_to_file(seq_flow, resources_path / 'seq_flow')
-        system_design_file = docs_path / 'system_design.md'
-        logger.info(f"Saving System Designs to {system_design_file}")
-        system_design_file.write_text(content)
-
-    def _save(self, context, system_design):
-        if isinstance(system_design, ActionOutput):
-            content = system_design.content
-            ws_name = CodeParser.parse_str(block="Python package name", text=content)
-        else:
-            content = system_design
-            ws_name = CodeParser.parse_str(block="Python package name", text=system_design)
-        workspace = WORKSPACE_ROOT / ws_name
-        self.recreate_workspace(workspace)
-        docs_path = workspace / 'docs'
-        resources_path = workspace / 'resources'
-        docs_path.mkdir(parents=True, exist_ok=True)
-        resources_path.mkdir(parents=True, exist_ok=True)
-        self._save_prd(docs_path, resources_path, context[-1].content)
-        self._save_system_design(docs_path, resources_path, content)
+        self.desc = "Based on the PRD, think about the system design, and design the corresponding APIs, data structures, and work flow."
 
     async def run(self, context):
         prompt = PROMPT_TEMPLATE.format(context=context, format_example=FORMAT_EXAMPLE)
-        # system_design = await self._aask(prompt)
-        system_design = await self._aask_v1(prompt, "system_design", OUTPUT_MAPPING)
-        self._save(context, system_design)
-        return system_design
+        rsp = await self.llm.aask(prompt)
+        
+        parsed_data = CodeParser.parse_code(block=True, text=rsp)
+        
+        return ActionOutput(content=rsp, instruct_content=parsed_data)
